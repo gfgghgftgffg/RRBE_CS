@@ -12,7 +12,7 @@ def divide_img(img, A_height):
     smoothList = [0] * N
 
     for i in range(N):
-        A = img.crop((0, i, width, i-1+A_height))
+        A = img.crop((0, i, width, i+A_height))
         A_width, A_height = A.size
 
         A_data = A.load()
@@ -22,34 +22,34 @@ def divide_img(img, A_height):
                 # block A only one row
                 if A_height == 1:
                     if row == 0 and column == 0:
-                        error = abs(A_data[row,column] - A_data[row,column+1])
+                        error = abs(A_data[column,row] - A_data[column+1,row])
                     elif row == 0 and column == A_width-1:
-                        error = abs(A_data[row,column] - A_data[row,column-1])
+                        error = abs(A_data[column,row] - A_data[column-1,row])
                     else:
-                        error = abs( A_data[row,column] - (A_data[row,column-1]+A_data[row,column-1]) / 2 )
+                        error = abs( A_data[column,row] - (A_data[column-1,row]+A_data[column+1,row]) / 2 )
 
                 else:
                     # 4 points
                     if row == 0 and column == 0:
-                        error = abs( A_data[row,column] - (A_data[row,column+1]+A_data[row+1,column]) / 2 )
+                        error = abs( A_data[column,row] - (A_data[column+1,row]+A_data[column,row+1]) / 2 )
                     elif row == 0 and column == A_width-1:
-                        error = abs( A_data[row,column] - (A_data[row,column-1]+A_data[row+1,column]) / 2 )
+                        error = abs( A_data[column,row] - (A_data[column-1,row]+A_data[column,row+1]) / 2 )
                     elif row == A_height-1 and column == 0:
-                        error = abs( A_data[row,column] - (A_data[row,column+1]+A_data[row-1,column]) / 2 )
+                        error = abs( A_data[column,row] - (A_data[column+1,row]+A_data[column,row-1]) / 2 )
                     elif row == A_height-1 and column == A_width-1:
-                        error = abs( A_data[row,column] - (A_data[row,column-1]+A_data[row-1,column]) / 2 )
+                        error = abs( A_data[column,row] - (A_data[column-1,row]+A_data[column,row-1]) / 2 )
                     # 4 rows/columns
                     elif row == 0:
-                        error = abs( A_data[row,column] - (A_data[row,column-1]+A_data[row,column+1]+A_data[row+1,column]) / 3 )
+                        error = abs( A_data[column,row] - (A_data[column-1,row]+A_data[column+1,row]+A_data[column,row+1]) / 3 )
                     elif row == A_height-1:
-                        error = abs( A_data[row,column] - (A_data[row,column-1]+A_data[row,column+1]+A_data[row-1,column]) / 3 )
+                        error = abs( A_data[column,row] - (A_data[column-1,row]+A_data[column+1,row]+A_data[column,row-1]) / 3 )
                     elif column == 0:
-                        error = abs( A_data[row,column] - (A_data[row-1,column]+A_data[row+1,column]+A_data[row,column+1]) / 3 )
+                        error = abs( A_data[column,row] - (A_data[column,row-1]+A_data[column,row+1]+A_data[column+1,row]) / 3 )
                     elif column == A_width-1:
-                        error = abs( A_data[row,column] - (A_data[row-1,column]+A_data[row+1,column]+A_data[row,column-1]) / 3 )
+                        error = abs( A_data[column,row] - (A_data[column,row-1]+A_data[column,row+1]+A_data[column-1,row]) / 3 )
                     # other inner point
                     else:
-                        error = abs( A_data[row,column] - (A_data[row-1,column]+A_data[row+1,column]+A_data[row,column-1]+A_data[row,column+1]) / 4 )
+                        error = abs( A_data[column,row] - (A_data[column,row-1]+A_data[column,row+1]+A_data[column-1,row]+A_data[column+1,row]) / 4 )
                 
                 smoothList[i] += error
         smoothList[i] = smoothList[i] / (A_height*A_width)

@@ -12,7 +12,6 @@ def RRBE(path, embedRate):
     img = Image.open(path)
     img = trans_to_GreyScale(img)
     width, height = img.size
-    embedRate = 0
     max_data_length = embedRate * height * width
 
     if embedRate < embedding_threshold_A:
@@ -21,5 +20,7 @@ def RRBE(path, embedRate):
     else:
         multi_embedding_turn = True
         A_height = ceil(max_data_length / width / 2)
+    A, B, index = divide_img(img, A_height)
+
 
 RRBE(1,2)
