@@ -168,22 +168,22 @@ def embedB(imgB, dataList, embedding_threshold_B):
 def encrypt(img_matrix, cipher):
     img_matrix_copy = img_matrix.copy()
     encrypted_img = stream_cipher_encrypt(img_matrix_copy, cipher)
-    flagData = [1 for i in range(10)]
+    flagData = [1 for i in range(15)]
     flagData += [0,0,1] # 001_bin = 1_oc
     flagData += [1,0] # [encrypt_flag, embeddinmg flag]
 
-    if encrypted_img.shape[0]*encrypted_img.shape[1] < 15:
+    if encrypted_img.shape[0]*encrypted_img.shape[1] < 20:
         print("not enough space to embedding.")
         return img_matrix
 
     num = 0
     for i in range(encrypted_img.shape[0]):
         for j in range(encrypted_img.shape[1]):
-            encrypted_img[i,j] = flagData[num]
+            encrypted_img[i,j] = utils.replace_lowbit(encrypted_img[i,j], flagData[num])
             num += 1
-            if num > 14:
+            if num > 19:
                 break
-        if num > 14:
+        if num > 19:
             break
-        
+
     return encrypted_img
