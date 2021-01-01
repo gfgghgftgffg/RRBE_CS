@@ -1,2 +1,10 @@
 # RRBE_CS
-A simple client-server system that uses RRBE to handle pictures
+server仅使用serverEmbedding.py
+其他文件供客户端使用，入口文件为RRBE.py
+
+客户端可以选择图片，输入密钥（通过流密码）将图片加密后存储。
+服务端对客户端处理后的文件进行信息嵌入。
+
+客户端再次收到服务端的图片后，可以进行信息提取、解密、无损还原成初始图片。
+
+注：文件中 path  cipher， 服务端嵌入的信息 均是写死的，懒狗了，等后续。
