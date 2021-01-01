@@ -48,7 +48,7 @@ def RRBE_upload(path, embedRate):
     # Embedding LSB info from A to B.
     embeddingRound = 1
     print("Embedding round:", embeddingRound)
-    handled_matrixB = embedB(B, dataList, embedding_threshold_B)
+    handled_matrixB = embedB(B, dataList, index)
 
     print("Embedding done.")
 
@@ -88,7 +88,7 @@ def RRBE_extract(path):
 
     matrix_input_copy = list(matrix_input.copy().flat)  
     startFlag = [1 for i in range(15)]
-    A_pos = 0
+    A_pos = -1
 
     for i in range(0,len(matrix_input_copy),width):
         tmpFlag = matrix_input_copy[i:i+15]
@@ -96,7 +96,9 @@ def RRBE_extract(path):
         if tmpFlag == startFlag:
             A_pos = i // width
             break
-
+    
+    if A_pos < 0:
+        return 'not find message'
 
     data = matrix_input[A_pos:A_pos+A_height,:] % 2
     endFlag = [0 for i in range(20)]
@@ -122,3 +124,59 @@ def RRBE_extract(path):
     return message
 
 #print(RRBE_extract(1))
+
+
+
+def RRBE_decrypt(path):
+    path = 'c://Users//ASUS//Desktop//enc_s.png'
+    embedRate = 0.2
+    embedding_threshold_A = 0.25
+    embedding_threshold_B = 0.2
+
+    img = Image.open(path)
+    matrix_input = np.asarray(img)
+    matrix_input = matrix_input.astype(int)
+    height, width = matrix_input.shape
+    max_data_length = embedRate * height * width
+
+    #Get part A and B.
+    if embedRate < embedding_threshold_A:
+        multi_embedding_turn = False
+        A_height = ceil(max_data_length / width)
+    else:
+        multi_embedding_turn = True
+        A_height = ceil(max_data_length / width / 2)
+
+    cipher = 'test'
+    decrypted_img = decrypt(matrix_input, cipher, A_height)
+
+    image_output = Image.fromarray(decrypted_img).convert('L')  
+    image_output.save('c://Users//ASUS//Desktop//enc_s_c.png')
+
+#RRBE_decrypt(1)
+
+def RRBE_recovery(path):
+    path = 'c://Users//ASUS//Desktop//enc_s_c.png'
+    embedRate = 0.2
+    embedding_threshold_A = 0.25
+    embedding_threshold_B = 0.2
+
+    img = Image.open(path)
+    matrix_input = np.asarray(img)
+    matrix_input = matrix_input.astype(int)
+    height, width = matrix_input.shape
+    max_data_length = embedRate * height * width
+
+    #Get part A and B.
+    if embedRate < embedding_threshold_A:
+        multi_embedding_turn = False
+        A_height = ceil(max_data_length / width)
+    else:
+        multi_embedding_turn = True
+        A_height = ceil(max_data_length / width / 2)
+
+    recoveryed_img = recoveryAB(matrix_input, A_height)
+    image_output = Image.fromarray(recoveryed_img).convert('L')  
+    image_output.save('c://Users//ASUS//Desktop//enc_s_c_r.png')
+
+#RRBE_recovery(1)

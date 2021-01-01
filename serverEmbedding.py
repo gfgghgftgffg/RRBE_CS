@@ -48,7 +48,7 @@ def embeddingA(path, extra_info=''):
 
     # embedding
     num = 0
-    for i in range(height):
+    for i in range(A_height):
         for j in range(width):
             num += 1
 
@@ -64,7 +64,8 @@ def embeddingA(path, extra_info=''):
         if num > len(dataList) + 20:
             break
     
-    print("done")
+
+    #print("done")
     matrix_output = Image.fromarray(matrix_input).convert('L')
     matrix_output.save('c://Users//ASUS//Desktop//enc_s.png')
 

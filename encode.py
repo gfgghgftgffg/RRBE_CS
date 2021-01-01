@@ -57,7 +57,7 @@ def additive_expansion(lm, ln, rm, rn, b, e):
 
 
 
-def encode(matrixB, infoList):
+def encode(matrixB, infoList, Aindex):
     sample_lm = sample_rm = sample_ln = sample_rn = 0
     dataList = get_margin_pixel(matrixB) + infoList
     dataSize = len(dataList)
@@ -126,7 +126,7 @@ def encode(matrixB, infoList):
     # print('BoundaryMap: {}', boundary_map)
     # print('dataList: {}'.format(dataList))
     
-
+    Aindex_bits = utils.int2bits_u32(Aindex)
     sample_lm_bits = utils.int2bits9(sample_lm)
     sample_ln_bits = utils.int2bits9(sample_ln)
     sample_rm_bits = utils.int2bits9(sample_rm)
@@ -138,7 +138,7 @@ def encode(matrixB, infoList):
     l_bits = utils.int2bits_u32(l)
     np_size_bits = utils.int2bits_u32(np_size)
     sp_size_bits = utils.int2bits_u32(sp_size)
-    overhead = sample_lm_bits + sample_ln_bits + sample_rm_bits + sample_rn_bits + notSample_lm_bits + notSample_ln_bits + notSample_rm_bits + notSample_rn_bits
+    overhead = Aindex_bits + sample_lm_bits + sample_ln_bits + sample_rm_bits + sample_rn_bits + notSample_lm_bits + notSample_ln_bits + notSample_rm_bits + notSample_rn_bits
     overhead = overhead + l_bits + sp_size_bits + np_size_bits + boundary_map
 
     # 边界像素不足

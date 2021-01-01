@@ -156,7 +156,13 @@ def psnr(x, y):
 
 
 def md5(a):
-    a += 'it_is_md5_salt_used_for_generate_string_key'
     m = hashlib.md5()
     m.update(a.encode(encoding='utf8'))
-    return m.hexdigest()
+    b = m.hexdigest()
+    b += 'it_is_md5_salt_used_for_generate_string_key'
+    m.update(b.encode(encoding='utf8'))
+    b = m.hexdigest()
+    b += 'second_salt_aaa'
+    m.update(b.encode(encoding='utf8'))
+    b = m.hexdigest()
+    return b
